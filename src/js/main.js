@@ -4,11 +4,30 @@
   const list = document.querySelector('.list');
   const select = document.querySelector('.input__select');
   const closeBtns = [];
+  const fruits = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry', 'Appla', 'Applw', 'Applu'];
+
+  const renderList = (arr) => {
+    select.innerHTML = '';
+    arr.forEach((element) => {
+      const li = document.createElement('li');
+      li.setAttribute('class', 'input__select-item');
+      li.textContent = element;
+      select.appendChild(li);
+    });
+  };
+  const finalArr = (arr, value) => {
+    const newArr = [];
+    arr.forEach((element) => {
+      if (element.indexOf(value) === 0) {
+        console.log(element);
+        newArr.push(element);
+      }
+    });
+    return newArr;
+  };
 
   const moveCursor = () => {
-    const listWidth = parseInt(
-      getComputedStyle(list, '').width.replace('px', ''),
-    );
+    const listWidth = parseInt(getComputedStyle(list, '').width.replace('px', ''));
     input.style.paddingLeft = `${listWidth + 20}px`;
   };
   const closeItem = () => {
@@ -39,26 +58,33 @@
 
   input.addEventListener('click', () => {
     placeholder.classList.add('out');
-    select.classList.add('active');
   });
   placeholder.addEventListener('click', () => {
     placeholder.classList.add('out');
-    select.classList.add('active');
+    input.focus();
   });
 
-  input.addEventListener('keypress', (e) => {
-    const inputValue = input.value;
+  input.addEventListener('keyup', (e) => {
+    if(!input.value) {
+      return input.value;
+      
+    } 
+      const inputValue = input.value[0].toUpperCase() + input.value.slice(1);
+      // return inputValue;
+    
+    // const inputValue = input.value[0].toUpperCase() + input.value.slice(1);
+    let array2 = finalArr(fruits, inputValue);
+    console.log(array2);
+    renderList(array2);
     if (e.key === 'Enter' && inputValue !== '') {
       createElem(inputValue);
       input.blur();
       input.value = '';
-      select.classList.remove('active');
       closeItem();
     }
   });
   select.addEventListener('click', (e) => {
     const selectValue = e.target.textContent;
-    select.classList.remove('active');
     createElem(selectValue);
     closeItem();
   });

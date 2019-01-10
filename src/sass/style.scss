@@ -87,7 +87,6 @@
       left: 0;
       border-radius: 0 0 8px 8px;
       box-shadow: -1px 5px 18px -4px rgba(0, 0, 0, 0.75);
-      display: none;
 
       &-item {
         list-style: none;
@@ -103,9 +102,6 @@
           border-radius: 0 0 8px 8px;
         }
       }
-    }
-    .active {
-      display: block;
     }
   }
 }
