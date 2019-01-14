@@ -4,8 +4,34 @@
   const list = document.querySelector('.list');
   const select = document.querySelector('.input__select');
   const closeBtns = [];
-  const fruits = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry', 'Appla', 'Applw', 'Applu'];
+  const fruits = [
+    'Apple',
+    'Ablle',
+    'Acle',
+    'Accle',
+    'Lemon',
+    'Lime',
+    'Orange',
+    'Strawberry',
+  ];
+  const debounce = (f, ms) => {
 
+    let timer = null;
+
+    return (...args) => {
+      const onComplete = () => {
+        f.apply(this, args);
+        timer = null;
+      };
+
+      if (timer) {
+        clearTimeout(timer);
+      }
+
+      timer = setTimeout(onComplete, ms);
+    };
+  };
+ 
   const renderList = (arr) => {
     select.innerHTML = '';
     arr.forEach((element) => {
@@ -15,11 +41,12 @@
       select.appendChild(li);
     });
   };
+  let g = debounce(renderList, 500);
+
   const finalArr = (arr, value) => {
     const newArr = [];
     arr.forEach((element) => {
       if (element.indexOf(value) === 0) {
-        console.log(element);
         newArr.push(element);
       }
     });
@@ -27,9 +54,12 @@
   };
 
   const moveCursor = () => {
-    const listWidth = parseInt(getComputedStyle(list, '').width.replace('px', ''));
+    const listWidth = parseInt(
+      getComputedStyle(list, '').width.replace('px', ''),
+    );
     input.style.paddingLeft = `${listWidth + 20}px`;
   };
+
   const closeItem = () => {
     closeBtns.forEach((element) => {
       element.addEventListener('click', () => {
@@ -65,17 +95,12 @@
   });
 
   input.addEventListener('keyup', (e) => {
-    if(!input.value) {
+    if (!input.value) {
       return input.value;
-      
-    } 
-      const inputValue = input.value[0].toUpperCase() + input.value.slice(1);
-      // return inputValue;
-    
-    // const inputValue = input.value[0].toUpperCase() + input.value.slice(1);
-    let array2 = finalArr(fruits, inputValue);
-    console.log(array2);
-    renderList(array2);
+    }
+    const inputValue = input.value[0].toUpperCase() + input.value.slice(1);
+    const array2 = finalArr(fruits, inputValue);
+    g(array2);
     if (e.key === 'Enter' && inputValue !== '') {
       createElem(inputValue);
       input.blur();
@@ -83,6 +108,7 @@
       closeItem();
     }
   });
+
   select.addEventListener('click', (e) => {
     const selectValue = e.target.textContent;
     createElem(selectValue);

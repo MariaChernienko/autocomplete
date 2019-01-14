@@ -6,15 +6,32 @@
   const closeBtns = [];
   const fruits = [
     'Apple',
+    'Ablle',
+    'Acle',
+    'Accle',
     'Lemon',
     'Lime',
     'Orange',
     'Strawberry',
-    'Appla',
-    'Applw',
-    'Applu',
   ];
+  const debounce = (f, ms) => {
 
+    let timer = null;
+
+    return (...args) => {
+      const onComplete = () => {
+        f.apply(this, args);
+        timer = null;
+      };
+
+      if (timer) {
+        clearTimeout(timer);
+      }
+
+      timer = setTimeout(onComplete, ms);
+    };
+  };
+ 
   const renderList = (arr) => {
     select.innerHTML = '';
     arr.forEach((element) => {
@@ -24,6 +41,7 @@
       select.appendChild(li);
     });
   };
+  let g = debounce(renderList, 500);
 
   const finalArr = (arr, value) => {
     const newArr = [];
@@ -82,7 +100,7 @@
     }
     const inputValue = input.value[0].toUpperCase() + input.value.slice(1);
     const array2 = finalArr(fruits, inputValue);
-    renderList(array2);
+    g(array2);
     if (e.key === 'Enter' && inputValue !== '') {
       createElem(inputValue);
       input.blur();
